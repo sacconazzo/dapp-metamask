@@ -1,7 +1,7 @@
 {
     "name": "dapp-metamask",
     "version": "1.0.0",
-    "description": "smartcontract methods with metamask",
+    "description": "smartcontract methods with web3 & metamask - client side",
     "main": "index.js",
     "scripts": {
         "test": "npx http-server"
