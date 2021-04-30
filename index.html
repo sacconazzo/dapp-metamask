@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Web 3 Demo</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <script src='node_modules/web3/dist/web3.min.js'></script>
+</head>
+
+<body>
+
+    Web 3 Demo
+    <br>
+    <button onclick="vote(1);">Vote id 1</button>
+    <br /><br /> Status: <span id="status">Loading...</span>
+
+    <script type="text/javascript">
+        async function loadWeb3() {
+            if (window.ethereum) {
+                window.web3 = new Web3(window.ethereum);
+                window.ethereum.enable();
+            }
+        }
+
+        async function loadContract() {
+            return await new window.web3.eth.Contract([{
+                "name": "",
+                "inputs": [{
+                    "name": "_title",
+                    "type": "string",
+                    "internalType": "string"
+                }, {
+                    "name": "proposalNames",
+                    "type": "bytes32[]",
+                    "internalType": "bytes32[]"
+                }],
+                "type": "constructor",
+                "payable": false,
+                "stateMutability": "nonpayable"
+            }, {
+                "constant": true,
+                "name": "chairperson",
+                "inputs": [],
+                "outputs": [{
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
+                }],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "view"
+            }, {
+                "constant": false,
+                "name": "closeVotation",
+                "inputs": [],
+                "outputs": [],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "nonpayable"
+            }, {
+                "constant": false,
+                "name": "giveRightToVote",
+                "inputs": [{
+                    "name": "voter",
+                    "type": "address",
+                    "internalType": "address"
+                }],
+                "outputs": [],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "nonpayable"
+            }, {
+                "constant": true,
+                "name": "isOpen",
+                "inputs": [],
+                "outputs": [{
+                    "name": "",
+                    "type": "bool",
+                    "internalType": "bool"
+                }],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "view"
+            }, {
+                "constant": true,
+                "name": "proposals",
+                "inputs": [{
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }],
+                "outputs": [{
+                    "name": "name",
+                    "type": "bytes32",
+                    "internalType": "bytes32"
+                }, {
+                    "name": "voteCount",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "view"
+            }, {
+                "constant": true,
+                "name": "title",
+                "inputs": [],
+                "outputs": [{
+                    "name": "",
+                    "type": "string",
+                    "internalType": "string"
+                }],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "view"
+            }, {
+                "constant": true,
+                "name": "totProposals",
+                "inputs": [],
+                "outputs": [{
+                    "name": "count_",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "view"
+            }, {
+                "constant": false,
+                "name": "vote",
+                "inputs": [{
+                    "name": "proposal",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }],
+                "outputs": [],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "nonpayable"
+            }, {
+                "constant": true,
+                "name": "voters",
+                "inputs": [{
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
+                }],
+                "outputs": [{
+                    "name": "weight",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }, {
+                    "name": "voted",
+                    "type": "bool",
+                    "internalType": "bool"
+                }, {
+                    "name": "vote",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "view"
+            }, {
+                "constant": true,
+                "name": "winnerName",
+                "inputs": [],
+                "outputs": [{
+                    "name": "winnerName_",
+                    "type": "bytes32",
+                    "internalType": "bytes32"
+                }],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "view"
+            }, {
+                "constant": true,
+                "name": "winnerVotes",
+                "inputs": [],
+                "outputs": [{
+                    "name": "count_",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "view"
+            }, {
+                "constant": true,
+                "name": "winningProposal",
+                "inputs": [],
+                "outputs": [{
+                    "name": "winningProposal_",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }],
+                "type": "function",
+                "payable": false,
+                "stateMutability": "view"
+            }], "0xed41e525cafefaff51c84a5450b3748a85cc8c77");
+        }
+
+        async function load() {
+            await loadWeb3();
+            window.contract = await loadContract();
+            updateStatus('Ready!');
+        }
+
+        function updateStatus(status) {
+            const statusEl = document.getElementById('status');
+            statusEl.innerHTML = status;
+            console.log(status);
+        }
+
+        async function getCurrentAccount() {
+            const accounts = await window.web3.eth.getAccounts();
+            return accounts[0];
+        }
+
+        async function vote(id) {
+            updateStatus('voting...');
+            const account = await getCurrentAccount()
+            const res = await window.contract.methods.vote(id).send({
+                from: account
+            });
+            console.log(res)
+            updateStatus(`voted: ${id}`);
+        }
+
+        load();
+    </script>
+</body>
+
+</html>
