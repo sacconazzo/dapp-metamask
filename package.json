@@ -4,7 +4,7 @@
     "description": "smartcontract methods with web3 & metamask - client side",
     "main": "index.js",
     "scripts": {
-        "test": "npx http-server"
+        "test": "npx http-server -a localhost -p 8180"
     },
     "author": "giona.tech",
     "license": "ISC",
