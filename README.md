@@ -1,19 +1,23 @@
 ### install
+
 ```
-npm install
+yarn
 ```
 
-### test 
+### run in local
+
 ```
-npm run test
+yarn dev
 ```
-listening on http://localhost:8080
+
+listening on http://localhost:8180
 
 ### info
 
 This demo app https://giona.tech/dapp0
 
 For testing configure Metamask with:
+
 - rpc address https://quorum.giona.tech
 - chainId 10
 
